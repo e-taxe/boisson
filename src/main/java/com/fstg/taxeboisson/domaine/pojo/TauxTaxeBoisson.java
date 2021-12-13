@@ -12,7 +12,6 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 public class TauxTaxeBoisson {
-    private String ref;
     private BigDecimal tarif;
     private Date dateDebutApplication;
     private Date dateFinApplication;

@@ -13,9 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class TaxeBoissonAnnuelle {
-    private String ref;
-    private double montantTotaleTaxeAnnuelle;
-    private BigDecimal chiffreAffaire;
+    private BigDecimal montantTotaleTaxeAnnuelle;
+    private BigDecimal montantTaxeRetardDeclaration;
     private int year;
     private String localRef;
+    private Date dateDeclaration;
 }

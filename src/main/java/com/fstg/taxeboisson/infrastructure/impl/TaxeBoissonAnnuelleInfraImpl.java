@@ -45,6 +45,13 @@ public class TaxeBoissonAnnuelleInfraImpl extends AbstractInfraImpl implements T
     }
 
     @Override
+    public int save(TaxeBoissonAnnuelle taxeBoissonAnnuelle) {
+        TaxeBoissonAnnuelleEntity taxeBoissonAnnuelleEntity = new TaxeBoissonAnnuelleEntity();
+        BeanUtils.copyProperties(taxeBoissonAnnuelle,taxeBoissonAnnuelleEntity);
+        return save(taxeBoissonAnnuelleEntity);
+    }
+
+    @Override
     public int update(TaxeBoissonAnnuelle taxeBoissonAnnuelle) {
         TaxeBoissonAnnuelleEntity taxeBoissonAnnuelleEntity = new TaxeBoissonAnnuelleEntity();
         BeanUtils.copyProperties(taxeBoissonAnnuelle,taxeBoissonAnnuelleEntity);

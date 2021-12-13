@@ -13,6 +13,5 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @ToString
 public class TypeBoisson {
-    private String ref;
     private String typeBoissson;
 }
