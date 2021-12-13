@@ -54,6 +54,7 @@ public class TaxeBoissonTrimMontantProcessImpl extends AbstractProcessImpl<TaxeB
 
     @Override
     public void run(TaxeBoissonTrimMontantInput taxeBoissonTrimAddInput, Result result) {
+        //init variables
         BigDecimal totaleTaxeTrim;
         BigDecimal tarifTaxe = null;
         BigDecimal tarifTaxeRetardOneMonth =  null;
@@ -64,7 +65,6 @@ public class TaxeBoissonTrimMontantProcessImpl extends AbstractProcessImpl<TaxeB
         TaxeBoissonTrim taxeBoissonTrim = new TaxeBoissonTrim();
         TauxTaxeBoisson tauxTaxeBoisson = null;
         DateUtils dateUtils = null;
-
         TaxeBoissonTrimEntity taxeBoissonTrimEntity = new TaxeBoissonTrimEntity();
         TaxeBoissonAnnuelleEntity taxeBoissonAnnuelleEntity = new TaxeBoissonAnnuelleEntity();
 
@@ -112,23 +112,8 @@ public class TaxeBoissonTrimMontantProcessImpl extends AbstractProcessImpl<TaxeB
         }
         System.out.println("tarif taxe : "+tarifTaxe);
         //calculate the total of the trim tax
-        totaleTaxeTrim = taxeBoissonTrimAddInput.getChiffreAffaire()
-                .multiply(tarifTaxe)
-                .add(taxeBoissonTrimAddInput.getChiffreAffaire()
-                        .multiply(tarifTaxeRetardOneMonth))
-                .add(taxeBoissonTrimAddInput.getChiffreAffaire()
-                        .multiply(tarifTaxeRetardMoreThanOneMonth)
-                        .multiply(mounthsLate)
-                );
-        taxeBoissonTrim.setNumTrim(taxeBoissonTrimAddInput.getNumTrim());
-        taxeBoissonTrim.setYear(taxeBoissonTrimAddInput.getYear());
-        taxeBoissonTrim.setTauxTaxeBoisson(tauxTaxeBoisson);
-        taxeBoissonTrim.setChiffreAffaire(taxeBoissonTrimAddInput.getChiffreAffaire());
-        taxeBoissonTrim.setLocalRef(taxeBoissonTrimAddInput.getLocalRef());
-        taxeBoissonTrim.setPaymentLate(isPaymentOneMonthLate || isPaymentMoreThanMonthLate);
-        taxeBoissonTrim.setNbrMoisRetard(mounthsLate);
-        //set the result of total tax
-        taxeBoissonTrim.setMontantTotaleTaxeTrim(totaleTaxeTrim);
+        totaleTaxeTrim = calculateTaxeTrim( taxeBoissonTrim,taxeBoissonTrimAddInput,tarifTaxe,tarifTaxeRetardOneMonth,tarifTaxeRetardMoreThanOneMonth,mounthsLate);
+        setTaxeBoissonTrim( taxeBoissonTrimAddInput, tauxTaxeBoisson, isPaymentOneMonthLate, mounthsLate, totaleTaxeTrim);
         taxeBoissonTrimEntity = mapPojo.taxeBoissonTrimPojotoTaxeTaxeBoissonTrimEntity(taxeBoissonTrim);
         //get the annual tax to set the total tax amount
         TaxeBoissonAnnuelle taxeBoissonAnnuelle = taxeBoissonAnnuelleInfra.findByLocalRefAndYear(taxeBoissonTrimAddInput.getLocalRef(),taxeBoissonTrimAddInput.getYear());
@@ -147,5 +132,31 @@ public class TaxeBoissonTrimMontantProcessImpl extends AbstractProcessImpl<TaxeB
         taxeBoissonTrimInfra.save(taxeBoissonTrimEntity);
         result.addInfoMessage(taxeBoissonTrimInfra.getMessage("taxeBoissonTrim.taxeBoissonTrim.created"));
 
+    }
+
+    private BigDecimal calculateTaxeTrim(TaxeBoissonTrimAddInput taxeBoissonTrimAddInput,BigDecimal tarifTaxe,BigDecimal tarifTaxeRetardOneMonth,BigDecimal tarifTaxeRetardMoreThanOneMonth,
+    BigDecimal mounthsLate
+    ){
+        BigDecimal totaleTaxeTrim = taxeBoissonTrimAddInput.getChiffreAffaire()
+                .multiply(tarifTaxe)
+                .add(taxeBoissonTrimAddInput.getChiffreAffaire()
+                        .multiply(tarifTaxeRetardOneMonth))
+                .add(taxeBoissonTrimAddInput.getChiffreAffaire()
+                        .multiply(tarifTaxeRetardMoreThanOneMonth)
+                        .multiply(mounthsLate)
+                );
+    }
+
+    private void setTaxeBoissonTrim(TaxeBoissonTrim taxeBoissonTrim , TaxeBoissonTrimAddInput taxeBoissonTrimAddInput,TauxTaxeBoisson tauxTaxeBoisson,boolean isPaymentLate,BigDecimal mounthsLate,BigDecimal totaleTaxeTrim){
+
+        taxeBoissonTrim.setNumTrim(taxeBoissonTrimAddInput.getNumTrim());
+        taxeBoissonTrim.setYear(taxeBoissonTrimAddInput.getYear());
+        taxeBoissonTrim.setTauxTaxeBoisson(tauxTaxeBoisson);
+        taxeBoissonTrim.setChiffreAffaire(taxeBoissonTrimAddInput.getChiffreAffaire());
+        taxeBoissonTrim.setLocalRef(taxeBoissonTrimAddInput.getLocalRef());
+        taxeBoissonTrim.setPaymentLate(isPaymentLate);
+        taxeBoissonTrim.setNbrMoisRetard(mounthsLate);
+        //set the result of total tax
+        taxeBoissonTrim.setMontantTotaleTaxeTrim(totaleTaxeTrim);
     }
 }
