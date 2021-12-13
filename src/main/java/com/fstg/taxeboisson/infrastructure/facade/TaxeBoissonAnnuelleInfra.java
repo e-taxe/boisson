@@ -17,6 +17,8 @@ public interface TaxeBoissonAnnuelleInfra extends AbstractInfra {
 
     int save(TaxeBoissonAnnuelleEntity taxeBoissonAnnuelleEntity);
 
+    int save(TaxeBoissonAnnuelle taxeBoissonAnnuelle);
+
     int update(TaxeBoissonAnnuelle taxeBoissonAnnuelle);
 
     int update(TaxeBoissonAnnuelleEntity taxeBoissonAnnuelleEntity);

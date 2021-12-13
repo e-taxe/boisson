@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -12,10 +13,11 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @ToString
 public class TaxeBoissonAnnuelleDTO {
-    private double montantTotaleTaxeAnnuelle;
-    private BigDecimal chiffreAffaire;
+    private BigDecimal montantTotaleTaxeAnnuelle;
+    private BigDecimal montantTaxeRetardDeclaration;
     private int year;
     private String localRef;
+    private Date dateDeclaration;
 
     public static TaxeBoissonAnnuelleMontantInput toTaxeBoissonAnnuelleAddInput(TaxeBoissonAnnuelleDTO taxeBoissonAnnuelleDTO) {
         TaxeBoissonAnnuelleMontantInput taxeBoissonAnnuelleAddInput = new TaxeBoissonAnnuelleMontantInput();

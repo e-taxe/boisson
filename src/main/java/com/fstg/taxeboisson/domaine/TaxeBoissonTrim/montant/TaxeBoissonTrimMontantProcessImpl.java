@@ -4,6 +4,7 @@ import com.fstg.taxeboisson.domaine.converter.MapPojo;
 import com.fstg.taxeboisson.domaine.core.AbstractProcessImpl;
 import com.fstg.taxeboisson.domaine.core.Result;
 import com.fstg.taxeboisson.domaine.pojo.TauxTaxeBoisson;
+import com.fstg.taxeboisson.domaine.pojo.TaxeBoissonAnnuelle;
 import com.fstg.taxeboisson.domaine.pojo.TaxeBoissonTrim;
 import com.fstg.taxeboisson.domaine.utils.DateUtils;
 import com.fstg.taxeboisson.infrastructure.entity.TauxTaxeBoissonEntity;
@@ -12,6 +13,7 @@ import com.fstg.taxeboisson.infrastructure.entity.TaxeBoissonAnnuelleEntity;
 import com.fstg.taxeboisson.infrastructure.entity.TaxeBoissonTrimEntity;
 import com.fstg.taxeboisson.infrastructure.facade.TauxTaxeBoissonInfra;
 import com.fstg.taxeboisson.infrastructure.facade.TauxTaxeBoissonRetardTrimInfra;
+import com.fstg.taxeboisson.infrastructure.facade.TaxeBoissonAnnuelleInfra;
 import com.fstg.taxeboisson.infrastructure.facade.TaxeBoissonTrimInfra;
 import org.springframework.beans.BeanUtils;
 
@@ -25,12 +27,15 @@ public class TaxeBoissonTrimMontantProcessImpl extends AbstractProcessImpl<TaxeB
     private TauxTaxeBoissonInfra tauxTaxeBoissonInfra;
     private TauxTaxeBoissonRetardTrimInfra tauxTaxeBoissonRetardTrimInfra;
     private DateUtils dateUtils = new DateUtils();
+    MapPojo mapPojo = new MapPojo();
+    private TaxeBoissonAnnuelleInfra taxeBoissonAnnuelleInfra;
 
 
-    public TaxeBoissonTrimMontantProcessImpl(TaxeBoissonTrimInfra taxeBoissonTrimInfra, TauxTaxeBoissonInfra tauxTaxeBoissonInfra, TauxTaxeBoissonRetardTrimInfra tauxTaxeBoissonRetardTrimInfra) {
+    public TaxeBoissonTrimMontantProcessImpl(TaxeBoissonTrimInfra taxeBoissonTrimInfra, TauxTaxeBoissonInfra tauxTaxeBoissonInfra, TauxTaxeBoissonRetardTrimInfra tauxTaxeBoissonRetardTrimInfra,TaxeBoissonAnnuelleInfra taxeBoissonAnnuelleInfra) {
         this.taxeBoissonTrimInfra = taxeBoissonTrimInfra;
         this.tauxTaxeBoissonInfra = tauxTaxeBoissonInfra;
         this.tauxTaxeBoissonRetardTrimInfra = tauxTaxeBoissonRetardTrimInfra;
+        this.taxeBoissonAnnuelleInfra = taxeBoissonAnnuelleInfra;
     }
 
     @Override
@@ -59,7 +64,6 @@ public class TaxeBoissonTrimMontantProcessImpl extends AbstractProcessImpl<TaxeB
         TaxeBoissonTrim taxeBoissonTrim = new TaxeBoissonTrim();
         TauxTaxeBoisson tauxTaxeBoisson = null;
         DateUtils dateUtils = null;
-        MapPojo mapPojo = null;
 
         TaxeBoissonTrimEntity taxeBoissonTrimEntity = new TaxeBoissonTrimEntity();
         TaxeBoissonAnnuelleEntity taxeBoissonAnnuelleEntity = new TaxeBoissonAnnuelleEntity();
@@ -116,9 +120,6 @@ public class TaxeBoissonTrimMontantProcessImpl extends AbstractProcessImpl<TaxeB
                         .multiply(tarifTaxeRetardMoreThanOneMonth)
                         .multiply(mounthsLate)
                 );
-
-
-
         taxeBoissonTrim.setNumTrim(taxeBoissonTrimAddInput.getNumTrim());
         taxeBoissonTrim.setYear(taxeBoissonTrimAddInput.getYear());
         taxeBoissonTrim.setTauxTaxeBoisson(tauxTaxeBoisson);
@@ -129,6 +130,19 @@ public class TaxeBoissonTrimMontantProcessImpl extends AbstractProcessImpl<TaxeB
         //set the result of total tax
         taxeBoissonTrim.setMontantTotaleTaxeTrim(totaleTaxeTrim);
         taxeBoissonTrimEntity = mapPojo.taxeBoissonTrimPojotoTaxeTaxeBoissonTrimEntity(taxeBoissonTrim);
+        //get the annual tax to set the total tax amount
+        TaxeBoissonAnnuelle taxeBoissonAnnuelle = taxeBoissonAnnuelleInfra.findByLocalRefAndYear(taxeBoissonTrimAddInput.getLocalRef(),taxeBoissonTrimAddInput.getYear());
+        if(taxeBoissonAnnuelle != null){
+            taxeBoissonAnnuelle.setMontantTotaleTaxeAnnuelle(taxeBoissonAnnuelle.getMontantTotaleTaxeAnnuelle().add(totaleTaxeTrim));
+            //update the annual taxe
+            taxeBoissonAnnuelleInfra.update(taxeBoissonAnnuelle);
+        }else{
+            taxeBoissonAnnuelle.setMontantTotaleTaxeAnnuelle(totaleTaxeTrim);
+            taxeBoissonAnnuelle.setYear(taxeBoissonTrimAddInput.getYear());
+            taxeBoissonAnnuelle.setLocalRef(taxeBoissonTrimAddInput.getLocalRef());
+            taxeBoissonAnnuelleInfra.save(taxeBoissonAnnuelle);
+        }
+
         //save the trim tax
         taxeBoissonTrimInfra.save(taxeBoissonTrimEntity);
         result.addInfoMessage(taxeBoissonTrimInfra.getMessage("taxeBoissonTrim.taxeBoissonTrim.created"));

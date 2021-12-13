@@ -16,7 +16,6 @@ package com.fstg.taxeboisson.domaine.pojo;
 @AllArgsConstructor
 @ToString
 public class TaxeBoissonTrim {
-    private String ref;
     private BigDecimal montantTotaleTaxeTrim;
     private int year;
     private int numTrim;

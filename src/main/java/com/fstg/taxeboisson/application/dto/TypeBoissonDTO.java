@@ -8,6 +8,5 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class TypeBoissonDTO {
-    private Long ref;
     private String typeBoissson;
 }

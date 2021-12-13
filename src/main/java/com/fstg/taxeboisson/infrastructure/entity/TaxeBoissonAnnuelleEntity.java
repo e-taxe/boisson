@@ -29,6 +29,7 @@ public class TaxeBoissonAnnuelleEntity {
     private String ref;
     private BigDecimal montantTotaleTaxeAnnuelle;
     private int year;
-    private BigDecimal chiffreAffaire;
+    private BigDecimal montantTaxeRetardDeclaration;
     private String localRef;
+    private Date dateDeclaration;
 }
