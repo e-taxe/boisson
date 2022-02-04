@@ -1,5 +1,7 @@
 package com.fstg.taxeboisson.application.util;
 
+import com.fstg.taxeboisson.domaine.tauxTaxeBoissonTrim.add.TauxTaxeTrimAddProcess;
+import com.fstg.taxeboisson.domaine.tauxTaxeBoissonTrim.add.TauxTaxeTrimAddProcessImpl;
 import com.fstg.taxeboisson.domaine.taxeBoissonAnnuelle.montant.TaxeBoissonAnnuelleMontantProcess;
 import com.fstg.taxeboisson.domaine.taxeBoissonAnnuelle.montant.TaxeBoissonAnnuelleMontantProcessImpl;
 import com.fstg.taxeboisson.domaine.taxeBoissonTrim.montant.TaxeBoissonTrimMontantProcess;
@@ -20,5 +22,10 @@ public class Processinjection {
     public TaxeBoissonAnnuelleMontantProcess taxeBoissonAnnuelleAddProcess(TaxeBoissonAnnuelleInfra taxeBoissonAnnuelleInfra, TauxTaxeAnnuelleInfra tauxTaxeAnnuelleInfra){
         return new TaxeBoissonAnnuelleMontantProcessImpl(taxeBoissonAnnuelleInfra,tauxTaxeAnnuelleInfra);
     }
+    
+    @Bean
+    public TauxTaxeTrimAddProcess  tauxTaxeTrimAddProcess(TauxTaxeBoissonInfra tauxTaxeBoissonInfra) {
+		return new TauxTaxeTrimAddProcessImpl(tauxTaxeBoissonInfra);
+	}
 }
 

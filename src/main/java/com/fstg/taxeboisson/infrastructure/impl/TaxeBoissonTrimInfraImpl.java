@@ -18,7 +18,13 @@ public class TaxeBoissonTrimInfraImpl extends AbstractInfraImpl implements TaxeB
 
     @Override
     public TaxeBoissonTrim findByReference(String reference) {
-        return taxeBoissonTrimDao.findByRef(reference);
+    	TaxeBoissonTrim taxeBoissonTrim = new TaxeBoissonTrim();
+    	TaxeBoissonTrimEntity taxeBoissonTrimEntity = taxeBoissonTrimDao.findByRef(reference);
+    	if(taxeBoissonTrimEntity != null) {
+    	BeanUtils.copyProperties(taxeBoissonTrimEntity, taxeBoissonTrim);
+    	return taxeBoissonTrim;
+    	}
+        return null;
     }
 
     @Override
@@ -28,8 +34,9 @@ public class TaxeBoissonTrimInfraImpl extends AbstractInfraImpl implements TaxeB
 
     @Override
     public int save(TaxeBoissonTrimEntity taxeBoissonTrimEntity) {
-        if (findByReference(taxeBoissonTrimEntity.getRef()) != null)
+        if (taxeBoissonTrimEntity.getRef() != null && findByReference(taxeBoissonTrimEntity.getRef()) != null)
             return -1;
+        System.out.println("3m"+taxeBoissonTrimEntity);
         taxeBoissonTrimDao.save(taxeBoissonTrimEntity);
         return 1;
     }

@@ -3,6 +3,7 @@ package com.fstg.taxeboisson.infrastructure.impl;
 import com.fstg.taxeboisson.domaine.pojo.TaxeBoissonAnnuelle;
 import com.fstg.taxeboisson.infrastructure.core.AbstractInfraImpl;
 import com.fstg.taxeboisson.infrastructure.dao.TaxeBoissonAnnuelleDao;
+import com.fstg.taxeboisson.infrastructure.entity.TauxTaxeBoissonEntity;
 import com.fstg.taxeboisson.infrastructure.entity.TaxeBoissonAnnuelleEntity;
 import com.fstg.taxeboisson.infrastructure.facade.TaxeBoissonAnnuelleInfra;
 import org.springframework.beans.BeanUtils;
@@ -18,7 +19,13 @@ public class TaxeBoissonAnnuelleInfraImpl extends AbstractInfraImpl implements T
 
     @Override
     public TaxeBoissonAnnuelle findByReference(String reference) {
-        return taxeBoissonAnnuelleDao.findByRef(reference);
+    	TaxeBoissonAnnuelleEntity tauxTaxeBoissonEntity = taxeBoissonAnnuelleDao.findByRef(reference);
+    	TaxeBoissonAnnuelle taxeBoissonAnnuelle = new TaxeBoissonAnnuelle();
+    	if(tauxTaxeBoissonEntity != null) {
+    	BeanUtils.copyProperties(tauxTaxeBoissonEntity, taxeBoissonAnnuelle);
+        return taxeBoissonAnnuelle;
+    	}
+    	return null;
     }
 
     @Override
@@ -28,7 +35,14 @@ public class TaxeBoissonAnnuelleInfraImpl extends AbstractInfraImpl implements T
 
     @Override
     public TaxeBoissonAnnuelle findByLocalRefAndYear(String localRef, int year) {
-        return taxeBoissonAnnuelleDao.findByLocalRefAndYear(localRef,year);
+    	TaxeBoissonAnnuelleEntity tauxTaxeBoissonEntity = taxeBoissonAnnuelleDao.findByLocalRefAndYear(localRef,year);
+    	TaxeBoissonAnnuelle taxeBoissonAnnuelle = new TaxeBoissonAnnuelle();
+    	if(tauxTaxeBoissonEntity != null) {
+
+        	BeanUtils.copyProperties(tauxTaxeBoissonEntity, taxeBoissonAnnuelle);
+        	return taxeBoissonAnnuelle;
+    	}
+        return null;
     }
 
     @Override

@@ -1,18 +1,23 @@
 package com.fstg.taxeboisson.domaine.utils;
 
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class DateUtils {
     public LocalDate dateToLocaleDate(Date date){
-        LocalDate localDate = LocalDate.parse(date.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
+    	
+        LocalDate localDate =  date.toInstant()
+        	      .atZone(ZoneId.systemDefault())
+        	      .toLocalDate();
+        System.out.println(localDate+" locate date");
         return localDate;
     }
     public LocalDate stringToLocaleDate(String date){
-        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
-        return localDate;
+        return LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
     }
     public LocalDate getLocaleDateWithNumTrim(int numTrim,int year){
         String date = "";
@@ -29,9 +34,9 @@ public class DateUtils {
             case 4 :
                 date = "31-12-"+year;
                 break;
+            default : return null;
         }
-        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
-        return localDate;
+        return LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
     }
     public LocalDate getLocaleDateWithMounth(int mounth,int year){
         String date = "";
@@ -72,20 +77,28 @@ public class DateUtils {
             case 12 :
                 date = "31-12-"+year;
                 break;
+            default : return null;
         }
-        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
-        return localDate;
+        return LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
     }
     public long getDaysOfNextTwoMounths(int numTrim,int year){
-        LocalDate dateLeft = stringToLocaleDate("01-"+(3*numTrim+1)+"-"+year);
-        LocalDate dateRight = getLocaleDateWithMounth((3*numTrim+2),year);
-        long days = getDaysBetween(dateLeft,dateRight);
-        return days;
+    	
+        LocalDate dateLeft = getLocaleDateWithMounth((3*numTrim),year);
+        LocalDate dateRight;
+        if(numTrim == 4) {
+        	 dateRight = getLocaleDateWithMounth(2,year+1);
+        }else {
+        	 dateRight = getLocaleDateWithMounth((3*numTrim+2),year);
+        }
+        
+        System.out.println(dateLeft+" **aaaah** "+dateRight);
+        
+		return getDaysBetween(dateLeft,dateRight);
     }
     public long getDaysBetween(LocalDate dateLeft,LocalDate dateRight){
-        Duration duration = Duration.between(dateLeft, dateRight);
-        long days = duration.toDays();
-        return days;
+    	
+    	long days = ChronoUnit.DAYS.between(dateLeft, dateRight);
+        return Math.abs(days);
     }
     public long getDays(LocalDate date){
         long days = 0;
@@ -93,12 +106,10 @@ public class DateUtils {
         return days;
     }
     public boolean leftGreaterThanRight(LocalDate dateLeft,LocalDate dateRight){
-        boolean result = dateLeft.isAfter(dateRight);
-        return result;
+        return dateLeft.isAfter(dateRight);
     }
 
     public boolean leftLessThanRight(LocalDate dateLeft,LocalDate dateRight){
-        boolean result = dateLeft.isBefore(dateRight);
-        return result;
+        return dateLeft.isBefore(dateRight);
     }
 }

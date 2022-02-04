@@ -8,9 +8,11 @@ import com.fstg.taxeboisson.infrastructure.entity.TauxTaxeBoissonEntity;
 import com.fstg.taxeboisson.infrastructure.facade.TauxTaxeAnnuelleInfra;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class TauxTaxeAnnuelleInfraImpl extends AbstractInfraImpl implements TauxTaxeAnnuelleInfra {
     @Autowired
     TauxTaxeAnnuelleDao tauxTaxeAnnuelleDao;

@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class TaxeBoissonAnnuelle {
+	private Long id; 
+	private String ref;
     private BigDecimal montantTotaleTaxeAnnuelle;
     private BigDecimal montantTaxeRetardDeclaration;
     private int year;
