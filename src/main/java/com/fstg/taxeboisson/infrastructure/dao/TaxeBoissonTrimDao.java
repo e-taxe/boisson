@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TaxeBoissonTrimDao  extends JpaRepository<TaxeBoissonTrimEntity, Long>{
-    TaxeBoissonTrim findByRef(String ref);
+	TaxeBoissonTrimEntity findByRef(String ref);
     int deleteByRef(String ref);
 }

@@ -37,42 +37,5 @@ public class TaxeBoissonAnnuelleMontantProcessImpl extends AbstractProcessImpl<T
     @Override
     public void run(TaxeBoissonAnnuelleMontantInput taxeBoissonAnnuelleAddInput, Result result) throws ParseException {
         //adilmx Run Code
-        BigDecimal montantTotalTaxeAnnuelle = null,montantTaxeRetardDeclaration = null;
-        BigDecimal tarifTaxeLateOneMounth = null, tarifTaxeLateMoreThanTwoMounth = null ,mounthsLate= null;
-
-        TaxeBoissonAnnuelle taxeBoissonAnnuelle = taxeBoissonAnnuelleInfra.findByLocalRefAndYear(taxeBoissonAnnuelleAddInput.getLocalRef(),taxeBoissonAnnuelleAddInput.getYear());
-        if(taxeBoissonAnnuelle == null){
-            taxeBoissonAnnuelle.setYear(taxeBoissonAnnuelleAddInput.getYear());
-            taxeBoissonAnnuelle.setLocalRef(taxeBoissonAnnuelleAddInput.getLocalRef());
-            montantTotalTaxeAnnuelle = BigDecimal.valueOf(0);
-        }else{
-            montantTotalTaxeAnnuelle = taxeBoissonAnnuelle.getMontantTotaleTaxeAnnuelle();
         }
-        List<TauxTaxeAnnuelleEntity> tauxTaxeAnnuelleEntities = tauxTaxeAnnuelleInfra.findAll();
-        for (TauxTaxeAnnuelleEntity tauxTaxeAnnuelleEntity:tauxTaxeAnnuelleEntities) {
-            LocalDate dateDeclaration = dateUtils.dateToLocaleDate(taxeBoissonAnnuelleAddInput.getDateDeclaration());
-            LocalDate dateFinApplication = dateUtils.dateToLocaleDate(tauxTaxeAnnuelleEntity.getDateFinApplication());
-            LocalDate dateFinAnnee = dateUtils.getLocaleDateWithMounth(12,taxeBoissonAnnuelleAddInput.getYear());
-            if(dateUtils.leftGreaterThanRight(dateFinApplication,dateDeclaration)){
-                long days = dateUtils.getDaysBetween(dateFinAnnee,dateDeclaration);
-                long daysNextTwoMounths = dateUtils.getDaysOfNextTwoMounths(4,taxeBoissonAnnuelleAddInput.getYear());
-                LocalDate nextDate = dateUtils.getLocaleDateWithMounth(1 , taxeBoissonAnnuelleAddInput.getYear());
-                long daysNextMounth = dateUtils.getDays(nextDate);
-                if (days > daysNextTwoMounths) {
-                    tarifTaxeLateMoreThanTwoMounth = tauxTaxeAnnuelleEntity.getTarifPremierMoisRetard();
-                } else if(days > daysNextMounth) {
-                    tarifTaxeLateOneMounth = tauxTaxeAnnuelleEntity.getTarifAutresMoisRetard();
-                }
-                mounthsLate = BigDecimal.valueOf(dateDeclaration.getMonth().getValue() - dateFinAnnee.getMonth().getValue());
-            }
-        }
-        montantTaxeRetardDeclaration = montantTotalTaxeAnnuelle
-                        .multiply(tarifTaxeLateOneMounth)
-                .add(montantTotalTaxeAnnuelle
-                        .multiply(tarifTaxeLateMoreThanTwoMounth)
-                        .multiply(mounthsLate)
-                );
-
-        result.addInfoMessage(taxeBoissonAnnuelleInfra.getMessage("taxeBoissonAnnuelle.taxeBoissonTrim.created"));
-    }
 }

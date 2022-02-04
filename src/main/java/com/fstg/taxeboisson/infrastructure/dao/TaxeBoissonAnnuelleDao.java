@@ -12,8 +12,8 @@ import org.springframework.stereotype.Repository;
 public interface TaxeBoissonAnnuelleDao extends JpaRepository<TaxeBoissonAnnuelleEntity, Long>{
 
     List<TaxeBoissonAnnuelle> findBylocalRef(String localRef);
-    TaxeBoissonAnnuelle findByLocalRefAndYear(String localRef,int year);
-    TaxeBoissonAnnuelle findByRef(String ref);
+    TaxeBoissonAnnuelleEntity findByLocalRefAndYear(String localRef,int year);
+    TaxeBoissonAnnuelleEntity findByRef(String ref);
     int deleteByRef(String ref);
     
     

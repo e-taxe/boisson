@@ -14,7 +14,8 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 public class TaxeBoissonTrimDTO {
-    private Date dateDebutTrim;
+
+    private Date datePaiement;
     private int year;
     private int numTrim;
     private BigDecimal chiffreAffaire;

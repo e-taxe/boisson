@@ -16,6 +16,7 @@ public class MapPojo {
         TaxeBoissonTrimEntity taxeBoissonTrimEntity = new TaxeBoissonTrimEntity();
         TauxTaxeBoissonEntity tauxTaxeBoissonEntity = tauxTaxeBoissonPojototauxTaxeBoissonEntity(taxeBoissonTrim.getTauxTaxeBoisson());
 
+        taxeBoissonTrimEntity.setRef(taxeBoissonTrim.getRef());
         taxeBoissonTrimEntity.setNumTrim(taxeBoissonTrim.getNumTrim());
         taxeBoissonTrimEntity.setYear(taxeBoissonTrim.getYear());
         taxeBoissonTrimEntity.setTauxTaxeBoisson(tauxTaxeBoissonEntity);
@@ -24,13 +25,14 @@ public class MapPojo {
         taxeBoissonTrimEntity.setPaymentLate(taxeBoissonTrim.isPaymentLate());
         taxeBoissonTrimEntity.setNbrMoisRetard(taxeBoissonTrim.getNbrMoisRetard());
         taxeBoissonTrimEntity.setMontantTotaleTaxeTrim(taxeBoissonTrim.getMontantTotaleTaxeTrim());
+        taxeBoissonTrimEntity.setDatePaiement(taxeBoissonTrim.getDatePaiement());
 
         return taxeBoissonTrimEntity;
     }
 
     public TauxTaxeBoissonEntity tauxTaxeBoissonPojototauxTaxeBoissonEntity(TauxTaxeBoisson tauxTaxeBoisson){
         TauxTaxeBoissonEntity tauxTaxeBoissonEntity = new TauxTaxeBoissonEntity();
-
+        tauxTaxeBoissonEntity.setId(tauxTaxeBoisson.getId());
         tauxTaxeBoissonEntity.setRef(tauxTaxeBoisson.getRef());
         tauxTaxeBoissonEntity.setTarif(tauxTaxeBoisson.getTarif());
         tauxTaxeBoissonEntity.setDateDebutApplication(tauxTaxeBoisson.getDateDebutApplication());
