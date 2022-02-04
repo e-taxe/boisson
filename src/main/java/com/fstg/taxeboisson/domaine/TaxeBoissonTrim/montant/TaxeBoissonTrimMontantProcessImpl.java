@@ -23,6 +23,7 @@ import com.fstg.taxeboisson.infrastructure.facade.TauxTaxeBoissonInfra;
 import com.fstg.taxeboisson.infrastructure.facade.TauxTaxeBoissonRetardTrimInfra;
 import com.fstg.taxeboisson.infrastructure.facade.TaxeBoissonAnnuelleInfra;
 import com.fstg.taxeboisson.infrastructure.facade.TaxeBoissonTrimInfra;
+
 import com.fstg.taxeboisson.infrastructure.required.feign.consumer.LocalFeignConsumer;
 import com.fstg.taxeboisson.infrastructure.vo.LocaleVo;
 
@@ -238,4 +239,5 @@ public class TaxeBoissonTrimMontantProcessImpl extends AbstractProcessImpl<TaxeB
 			taxeBoissonAnnuelleInfra.save(taxeBoissonAnnuelle);
 		}
 	}
+
 }
